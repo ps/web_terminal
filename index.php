@@ -171,7 +171,7 @@ document.getElementById('cmd').onkeypress = function(e)
         }
         
       }
-      else if((user.value).trim() == "cd")
+      else if( ((user.value).trim()).substring(0,2) == "cd")
       {
         if((out.innerHTML).length==0 )
         {
