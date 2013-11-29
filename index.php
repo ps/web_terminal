@@ -16,17 +16,8 @@
     <link href="includes/normalize.css" rel="stylesheet" type="text/css">
     <link href="includes/styles.css" rel="stylesheet" type="text/css">
 
-    <!-- styles needed by jScrollPane -->
-    <link type="text/css" href="jquery.jscrollpane.css" rel="stylesheet" media="all" />
-
-    <!-- latest jQuery direct from google's CDN -->
+    <!-- latest jQuery direct from googles CDN -->
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-
-    <!-- the mousewheel plugin - optional to provide mousewheel support -->
-    <script type="text/javascript" src="jquery.mousewheel.js"></script>
-
-    <!-- the jScrollPane script -->
-    <script type="text/javascript" src="jquery.jscrollpane.min.js"></script>
 
   </head>
 <body>
@@ -47,7 +38,7 @@ Type 'ls' to see all of the pages available. Type 'cat "page"', for example 'cat
 <div class="window">
   <div class="topbar">
     <div class="topbarImg">
-      <img src="buttons.png">
+      <img src="includes/buttons.png">
     </div>
     <div class="topbarContent">
       guest@pawel.pw:~$
