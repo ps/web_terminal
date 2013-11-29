@@ -8,7 +8,7 @@
   	<meta name="description" content="">
   	<meta name="author" content="Pawel Szczurko">
   	<link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
-    <link href="../includes/normalize.css" rel="stylesheet" type="text/css">
+    <!--link href="../includes/normalize.css" rel="stylesheet" type="text/css"-->
 
     <!--ubuntu mono font from google-->
     <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:700' rel='stylesheet' type='text/css'>
@@ -64,12 +64,29 @@
   height:400px;
   background-color: #300A24;
   border:1px solid #000000;
+  box-shadow: 10px 10px 5px #888888;
 }
 .topbar
 {
   background-color: #44433F;
   color:#FFFFFF;
   height:30px;
+  width:100%;
+}
+.topbarContent
+{
+  height: 100%;
+  position: relative;
+  top: -4px;
+  display: inline;
+}
+.topbarImg
+{
+  height: 100%;
+  position: relative;
+  top: 4px;
+  padding-left: 5px;
+  display: inline;
 }
 .cmdCover
 {
@@ -90,7 +107,14 @@
 
 
   <div class="window">
-    <div class="topbar">guest@pawel.pw:~$</div>
+    <div class="topbar">
+      <div class="topbarImg">
+        <img src="buttons.png">
+      </div>
+      <div class="topbarContent">
+        guest@pawel.pw:~$
+      </div>  
+    </div>
       
       <div class="scrollableWindow" id="scrollableWindow">
         <div id="output"></div>
@@ -304,21 +328,75 @@ document.getElementById('cmd').onkeypress = function(e)
           var validOutput = "";
           for(i=1; i<args.length; i++)
           {
-            console.log("searching: "+args[i]);
             var pgIndex = $.inArray(args[i], pages);
             if( pgIndex !=-1 )
             {
-              /*file exists add to list*/
-              console.log("file found");
-              for(j=0; j<pgContent[pgIndex].length; j++)
+              //Array("contact.php","index.php","projects.php", "work.php", "resume.pdf");
+            /*file exists add to list*/
+              validOutput += args[i]+"<br>-------------------<br>";
+              if(pgIndex==4)
               {
-                validOutput += pgContent[pgIndex][j] + "<br>";
-                console.log(validOutput);
+                validOutput += "My current resume can be found <a href=\"http://www.pawel.pw/szczurko_res2.pdf\" target=\"_blank\">here</a>.<br>";
               }
+              else
+              {
+
+                for(j=0; j<pgContent[pgIndex].length; j++)
+                {
+                  //validOutput += pgContent[pgIndex][j];
+                  var entry = pgContent[pgIndex][j].split(";;");
+                  for(k=0; k<entry.length; k++)
+                  {
+                    if(pgIndex==2)
+                    {
+                      if(k==0)
+                      {
+                        validOutput += "<a href=\""+entry[1]+"\" target=\"_blank\">"+entry[k]+"</a>";
+                      }
+                      else if(k==2)
+                      {
+                        validOutput += "<u>Details</u>: "+entry[k];
+                      }
+                      else if(k==3)
+                      {
+                        validOutput += "<u>Description</u>: "+entry[k];
+                      }
+                    }
+                    else if(pgIndex==3 )
+                    {
+                      if(k==2)
+                      {
+                        validOutput += "<a href=\""+entry[1]+"\" target=\"_blank\">"+entry[k]+"</a>";
+                      }
+                      else if(k==3)
+                      {
+                        validOutput += "<u>Position</u>: "+entry[k];
+                      }
+                      else if(k==4)
+                      {
+                        validOutput += "<u>Description</u>: "+entry[k];
+                      }
+                    }
+                    else
+                    {
+                      validOutput += entry[k];
+                    }
+                    if(k != entry.length-1)
+                    {
+                      validOutput += "<br>";
+                    }
+                  }
+
+                if(j != pgContent[pgIndex].length-1)
+                {
+                  validOutput += "<br>";
+                }
+                }
+              }
+            
             }
             else
             {
-              console.log("file not found");
               /*print out error that file does not exist*/
               out.innerHTML = out.innerHTML + errorOutput(out, preText, "cat: "+args[i]+": No such file or directory", "", false);
             }
@@ -331,6 +409,15 @@ document.getElementById('cmd').onkeypress = function(e)
           }
         }
         
+      }
+      else if( ((user.value).trim()).substring(0,3) == "pwd")
+      {
+        /*******DESCRIPTION*********
+         current 'path'
+         **************************/
+        out.innerHTML = createOutput(out, preText, user.value);
+
+        out.innerHTML = out.innerHTML+"<br>http://terminal.pawel.pw";
       }
       else if( ((user.value).trim()).substring(0,3) == "vim")
       {
