@@ -106,8 +106,98 @@
 
 </body>
 <script>
+<?php 
+  //echo "var myTest = 'global stuff here yo';";
+$outVar = "var pgContent = [";
+
+//read in index.txt
+
+$pages = array("contact.txt","index.txt","projects.txt", "work.txt");
+$break = 0;
+
+for($j=0 ; $j< count($pages); $j++)
+{
+  $content = file_get_contents("http://www.pawel.pw/text/".$pages[$j]);
+  $content = str_replace("'", "\'", $content);
+  $content = str_replace("\n", " ", $content);
+
+  $subCats = true;
+  if($pages[$j]=="index.txt" || $pages[$j]=="contact.txt")
+  {
+    $subCats=false;
+  }
+
+  $lines = explode("===", $content);  
+
+  $outVar .= "[";
+  for($i=0; $i<count($lines); $i++)
+  {
+    $break++;
+    $outVar .= "'".$lines[$i]."'";
+    if($i!= (count($lines)-1))
+    {
+      $outVar .=",";
+    }
+  }
+  $outVar .= "]";
+  if($j!= (count($pages)-1))
+  {
+    $outVar .=",";
+  }
+}
+$outVar .= "];";
+
+echo $outVar;
+
+?>
+/*for(i =0; i<pgContent.length; i++)
+{
+  console.log(pgContent[i][0]);
+}*/
+
+</script>
+<script>
+function createOutput( out, preText, outText)
+{
+  if((out.innerHTML).length==0 )
+  {
+    return preText+ outText ;
+  }
+  else 
+  {
+    return out.innerHTML + '<br>'+preText+ outText;
+  }
+}
+function errorOutput(out, preText, outText, msg, includePreText)
+{
+  if(!includePreText)
+  {
+    return '<br>'+outText+msg;
+  }
+
+  if((out.innerHTML).length==0 )
+  {
+    return preText+ outText + '<br>'+outText+msg;
+  }
+  else 
+  {
+    return out.innerHTML + '<br>'+preText+ outText + '<br>'+outText+msg;
+  }
+}
+function errorNotSupportedCommands(out, preText, originalCMD, baseCMD, msg)
+{
+  if((out.innerHTML).length==0 )
+  {
+    return preText+ originalCMD + '<br>'+baseCMD+msg;
+  }
+  else 
+  {
+    return out.innerHTML + '<br>'+preText+ originalCMD + '<br>'+baseCMD+msg;
+  }
+}
+
 var preText = 'guest@pawel.pw~$ ';
-var pages = new Array("aboutme.txt", "contact.txt", "projects.txt", "resume.pdf", "work.txt");
+var pages = new Array("contact.php","index.php","projects.php", "work.php", "resume.pdf");
 
 document.onclick = function()
 {
@@ -147,54 +237,152 @@ document.getElementById('cmd').onkeypress = function(e)
     if ( charCode == '13' ) 
     {
       var out = document.getElementById('output');
-      if( (user.value).trim() == "clear")
+      var args = user;
+
+      if( (user.value).trim().substring(0,5) == "clear")
       {
+        /*******DESCRIPTION*********
+         basic clear command
+         **************************/
         out.innerHTML="";
-
       }
-      else if((user.value).trim()=="ls")
+      else if((user.value).trim().substring(0,2)=="ls")
       {
-        if((out.innerHTML).length==0 )
-        {
-          out.innerHTML =preText+ user.value ;
-        }
-        else 
-        {
-          out.innerHTML =out.innerHTML + '<br>'+preText+ user.value;
-        }
+        /*******DESCRIPTION***********
+         list files in the 'directory'
+         *****************************/
+        out.innerHTML = createOutput(out, preText, user.value);
 
-        out.innerHTML = out.innerHTML + "<br>";
+        args = args.value.match(/\S+/g);
 
-        for(i =0; i<pages.length; i++)
+        /*if no extra files do listing of everything*/
+        if(args.length==1)
         {
-          out.innerHTML = out.innerHTML + pages[i] + "&nbsp;&nbsp;";
+          out.innerHTML = out.innerHTML + "<br>";
+          for(i =0; i<pages.length; i++)
+          {
+            out.innerHTML = out.innerHTML + pages[i] + "&nbsp;&nbsp;";
+          }
+        }
+        else /*list the specific file*/
+        {
+          var correctFiles = "";
+          for(i=1; i<args.length; i++)
+          {
+            if( ($.inArray(args[i], pages)) !=-1 )
+            {
+              /*file exists add to list*/
+              correctFiles += args[i] + "&nbsp;&nbsp;";
+            }
+            else
+            {
+              /*print out error that file does not exist*/
+              out.innerHTML = out.innerHTML + errorOutput(out, preText, "ls: cannot access "+args[i]+": No such file or directory", "", false);
+            }
+          }
+          if(correctFiles != "")
+          {
+            /*print out the correct files*/
+            out.innerHTML = out.innerHTML + "<br>";
+            out.innerHTML = out.innerHTML + correctFiles;
+          }
         }
         
       }
+      else if((user.value).trim().substring(0,3)=="cat")
+      {
+        /*******DESCRIPTION*********
+         view pages WOOO!
+         **************************/
+        out.innerHTML = createOutput(out, preText, user.value);
+
+        args = args.value.match(/\S+/g);
+
+
+        if(args.length !=1)
+        {
+          var validOutput = "";
+          for(i=1; i<args.length; i++)
+          {
+            console.log("searching: "+args[i]);
+            var pgIndex = $.inArray(args[i], pages);
+            if( pgIndex !=-1 )
+            {
+              /*file exists add to list*/
+              console.log("file found");
+              for(j=0; j<pgContent[pgIndex].length; j++)
+              {
+                validOutput += pgContent[pgIndex][j] + "<br>";
+                console.log(validOutput);
+              }
+            }
+            else
+            {
+              console.log("file not found");
+              /*print out error that file does not exist*/
+              out.innerHTML = out.innerHTML + errorOutput(out, preText, "cat: "+args[i]+": No such file or directory", "", false);
+            }
+          }
+          if(validOutput != "")
+          {
+            /*print out the correct files*/
+            out.innerHTML = out.innerHTML + "<br>";
+            out.innerHTML = out.innerHTML + validOutput;
+          }
+        }
+        
+      }
+      else if( ((user.value).trim()).substring(0,3) == "vim")
+      {
+        /*******DESCRIPTION*********
+         NON supported vim
+         **************************/
+        var directoryCMD = (user.value).trim().substring(0,3);
+
+        out.innerHTML = errorNotSupportedCommands(out, preText, user.value, directoryCMD, ": No way I'm recreating vim in JavaScript...");
+      }
+      else if( ((user.value).trim()).substring(0,2) == "vi")
+      {
+        /*******DESCRIPTION*********
+         NON supported vi
+         **************************/
+        var directoryCMD = (user.value).trim().substring(0,2);
+
+        out.innerHTML = errorNotSupportedCommands(out, preText, user.value, directoryCMD, ": No way I'm recreating vim in JavaScript...");
+      }
       else if( ((user.value).trim()).substring(0,2) == "cd")
       {
-        if((out.innerHTML).length==0 )
-        {
-          out.innerHTML =preText+ user.value;
-        }
-        else 
-        {
-          out.innerHTML =out.innerHTML + '<br>'+preText+ user.value;
-        }
+        /**********DESCRIPTION***********
+         NON supported directory commands
+         ********************************/
+        var directoryCMD = (user.value).trim().substring(0,2);
+
+        out.innerHTML = errorNotSupportedCommands(out, preText, user.value, directoryCMD, ": directory commands not supported.");
+      }
+      else if( ((user.value).trim()).substring(0,5) == "mkdir")
+      {
+        /**********DESCRIPTION***********
+         NON supported directory commands
+         ********************************/
+        var directoryCMD = (user.value).trim().substring(0,5);
+
+        out.innerHTML = errorNotSupportedCommands(out, preText, user.value, directoryCMD, ": directory commands not supported.");
+      }
+      else if(user.value.length==0 || user.value.trim().length==0)
+      {
+        /**************DESCRIPTION***************
+         no command enered
+         ****************************************/
+        out.innerHTML = createOutput(out, preText, user.value);
       }
       else
       {
-        if((out.innerHTML).length==0 )
-        {
-          out.innerHTML =preText+ user.value + '<br>'+user.value+': command not found';
-        }
-        else 
-        {
-          out.innerHTML =out.innerHTML + '<br>'+preText+ user.value + '<br>'+user.value+': command not found';
-        }
+        /**************DESCRIPTION***************
+         default message for command not existing
+         ****************************************/
+        out.innerHTML = errorOutput (out, preText, user.value, ': command not found', true);
       }
       
-
       //clears the hidden inputbox
       user.value= "";
 
