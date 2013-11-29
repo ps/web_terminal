@@ -14,7 +14,7 @@ img
 	border-style: none;
 
 }
-a img, a:hover img, a:visited img
+/*a img, a:hover img, a:visited img
 {
 	outline: 0;
 }
@@ -31,7 +31,7 @@ a:hover
 	color:black;
 	text-decoration: underline;
 	font-weight: bold;
-}
+}*/
 /*END======== GENERAL STYLES*/
 
 /*START======== Terminal specific styles*/
@@ -133,14 +133,14 @@ a:hover
   overflow: auto;
 }
 
-#window a:link, a:visited, a:hover, a:active
+a:link, a:visited, a:hover, a:active
 {
   outline: 0;
   color:#985682;
   text-decoration: none;
   font-weight: bold;
 }
-#window a:hover
+a:hover
 {
   outline: 0;
   color:#985682;
