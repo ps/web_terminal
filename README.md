@@ -1,3 +1,4 @@
-Web Terminal
+Web Terminal 
+===========
 
--Live version can be found at [http://terminal.pawel.pw](http://terminal.pawel.pw)
+* Live version along with usage instructions can be found at [http://terminal.pawel.pw](http://terminal.pawel.pw)
