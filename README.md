@@ -5,4 +5,5 @@ Web Terminal
 * I did this little side project to explore JavaScript a little bit.
 
 #####Disclaimer#####
-* The web terminal works best in Firefox. At the moment Chrome still works but the way backspace is being handeled is a little peculiar.
+* The web terminal works best in Firefox. At the moment Chrome and IE still works but the way 
+backspace is being handeled is a little peculiar. Compatibility for those browsers is coming soon.
