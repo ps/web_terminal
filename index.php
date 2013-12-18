@@ -7,7 +7,6 @@
   	<meta name="description" content="">
   	<meta name="author" content="Pawel Szczurko">
   	<link rel="icon" href="includes/favicon.ico" type="image/x-icon" />
-    <!--link href="../includes/normalize.css" rel="stylesheet" type="text/css"-->
 
     <!--ubuntu mono font from google-->
     <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:700' rel='stylesheet' type='text/css'>
@@ -24,6 +23,7 @@
 
 <div class="banner">~$ The Terminal Site</div>
 <div class="mainContent">
+<b>Disclaimer</b>: This web app works best in Firefox. Compatibility with Chrome and IE is coming soon.<br><br>
 This is a way to browse my <a href="http://www.pawel.pw">website</a> through this JavaScript simulated terminal.
 <br><br>
 <u>Supported commands</u>: cat, pwd, ls, clear
