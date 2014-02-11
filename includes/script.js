@@ -52,6 +52,7 @@ function errorNotSupportedCommands(out, preText, originalCMD, baseCMD, msg)
 }
 
 var preText = 'guest@pawel.pw~$ ';
+
 var pages = new Array("contact.php","index.php","projects.php", "work.php", "resume.pdf");
 
 document.onclick = function()
@@ -63,11 +64,54 @@ window.onload = function()
 {
   //get focus to cmd textbox
   document.getElementById("cmd").focus();
+  $("#cmd").val("");
 
   //initiate brlinking cursor
   blinks(1);
 };
 
+//this change is because Chrome interprets keystrokes
+//different from Firefox. 'onkeyup' reads all keys including
+//backspace on both browers while 'onkeypress' is not trigerred
+//when backspace is pressed
+//
+//onkeyup is slower, keypress is faster but only
+//supported by firefox so Im just using a boolean 
+//that is set via PHP on the index.php page
+document.getElementById('cmd').onkeyup = function(e) 
+{
+
+    //do this only if not Firefox browser
+    if(!fire)
+    {
+      var user = document.getElementById('cmd');    
+
+      var event = e || window.event;
+      var charCode = event.which || event.keyCode;
+      var cmdCover = document.getElementById('cmdCover');
+
+      if( charCode=='8')//backspace
+      {
+        if( (user.value).length==0)
+        {
+          cmdCover.innerHTML=preText;
+        }
+        else
+        {
+          //Old code with bugs, keeping it for now
+          //cmdCover.innerHTML=preText+(user.value).substring(0,(user.value).length -1 );
+          cmdCover.innerHTML=preText+(user.value);
+        }
+      }
+      else//value of textbox + current key pressed
+      {
+        //Old code that was erroneous, keeping it for now
+        //cmdCover.innerHTML=preText+user.value+String.fromCharCode(charCode);   
+        cmdCover.innerHTML=preText+user.value;
+      }
+    }
+    return false;
+}
 document.getElementById('cmd').onkeypress = function(e) 
 {
     var user = document.getElementById('cmd');    
@@ -75,21 +119,27 @@ document.getElementById('cmd').onkeypress = function(e)
     var event = e || window.event;
     var charCode = event.which || event.keyCode;
     var cmdCover = document.getElementById('cmdCover');
+    console.log("regular js: "+charCode);
 
-    if( charCode=='8')//backspace
+    //do this only for firefox since
+    //keypress is faster
+    if(fire)
     {
-      if( (user.value).length==0)
+      if( charCode=='8')//backspace
       {
-        cmdCover.innerHTML=preText;
+        if( (user.value).length==0)
+        {
+          cmdCover.innerHTML=preText;
+        }
+        else
+        {
+          cmdCover.innerHTML=preText+(user.value).substring(0,(user.value).length -1 );
+        }
       }
-      else
+      else//value of textbox + current key pressed
       {
-        cmdCover.innerHTML=preText+(user.value).substring(0,(user.value).length -1 );
+        cmdCover.innerHTML=preText+user.value+String.fromCharCode(charCode);
       }
-    }
-    else//value of textbox + current key pressed
-    {
-      cmdCover.innerHTML=preText+user.value+String.fromCharCode(charCode);
     }
 
     //the below happens if user hits 'enter' key

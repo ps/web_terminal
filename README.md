@@ -5,5 +5,5 @@ Web Terminal
 * I did this little side project to explore JavaScript a little bit.
 
 #####Disclaimer#####
-* The web terminal works best in Firefox. At the moment Chrome and IE still works but the way 
-backspace is being handeled is a little peculiar. Compatibility for those browsers is coming soon.
+* Typing speed (in the terminal) may vary between browers due to varying usage of 'onkeypress' vs 'onkeyup' events. 
+The reason for the spilt usage is the fact that not all browsers trigger 'onkeypress' event when the backspace button is pressed.

@@ -23,8 +23,9 @@
 
 <div class="banner">~$ The Terminal Site</div>
 <div class="mainContent">
-<b>Disclaimer</b>: This web app works best in Firefox. Compatibility with Chrome and IE is coming soon.<br><br>
-This is a way to browse my <a href="http://www.pawel.pw">website</a> through this JavaScript simulated terminal.
+This is a way to browse my <a href="http://www.pawel.pw" target="_blank">website</a> through this JavaScript simulated terminal.<br><br>
+<b>Disclaimer</b>: Typing speed (in the terminal) may vary between browers due to varying usage of 'onkeypress' vs 'onkeyup' events. 
+The reason for the spilt usage is the fact that not all browsers trigger 'onkeypress' event when the backspace button is pressed.
 <br><br>
 <u>Supported commands</u>: cat, pwd, ls, clear
 <br>
@@ -63,6 +64,18 @@ Type 'ls' to see all of the pages available. Type 'cat "page"', for example 'cat
 </div>
 
 <script>
+<?php
+
+//not firefox
+if(strlen(strstr($_SERVER['HTTP_USER_AGENT'],"Firefox")) <= 0 )
+{
+  echo "var fire=false;";
+}
+else //firefox
+{
+  echo "var fire=true;";
+}
+?>
 //This script can't be moved outside since it is dynamically generated with PHP
 
 <?php 
