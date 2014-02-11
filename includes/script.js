@@ -119,7 +119,6 @@ document.getElementById('cmd').onkeypress = function(e)
     var event = e || window.event;
     var charCode = event.which || event.keyCode;
     var cmdCover = document.getElementById('cmdCover');
-    console.log("regular js: "+charCode);
 
     //do this only for firefox since
     //keypress is faster
